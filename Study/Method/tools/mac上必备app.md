@@ -1,0 +1,6 @@
+- Imagine
+- Pixelmator
+- VisualDiffer
+- cheatsheet
+- valgrind：内存分析工具
+- sequelpro：mysql client
