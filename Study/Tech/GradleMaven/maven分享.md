@@ -70,7 +70,7 @@ $ vim org/apache/maven/model/pom-4.0.0.xml
 
 如下显示了maven构件的一组坐标定义：
 
-```
+```xml
 <groupId>org.springframework</groupId>
 <artifactId>spring-core</artifactId>
 <version>4.0.3.RELEASE</version>
@@ -93,7 +93,7 @@ Maven坐标的元素包括：
 ### Inheritance and Aggregation
 Maven的继承关系：
 
-```
+```xml
 <parent>
 	    <groupId>com.bj58.qdyw.business</groupId>
 	    <artifactId>com.bj58.qdyw.business</artifactId>
@@ -104,7 +104,7 @@ Maven的继承关系：
 
 Maven的聚合关系：
 
-```
+```xml
 <modules>
 	<module>com.bj58.qdyw.business.car</module>
 	<module>com.bj58.qdyw.business.house</module>
@@ -121,7 +121,7 @@ Maven的聚合关系：
 ## Dependency
 一个简单的依赖配置声明如下：
 
-```
+```xml
 <dependencies>
 	<dependency>
 	    <groupId>com.bj58.qdyw.business</groupId>
@@ -171,18 +171,18 @@ Maven的聚合关系：
 #### 1. Excluded Dependency （排除依赖）
 通过使用**exclusions**元素声明要排除的依赖
 
-```
-<dependency\>
-<groupId\>com.bj58.passport\</groupId\>
-<artifactId\>com.bj58.passport.webclient\</artifactId\>
-<version\>1.0.3-SNAPSHOT\</version\>
-<exclusions\>
-<exclusion\>
-<artifactId\>commons-logging\</artifactId\>
-<groupId\>commons-logging\</groupId\>
-</exclusion\>
-</exclusions\>
-</dependency\>
+```xml
+<dependency>
+<groupId>com.bj58.passport</groupId>
+<artifactId>com.bj58.passport.webclient</artifactId>
+<version>1.0.3-SNAPSHOT</version>
+<exclusions>
+<exclusion>
+<artifactId>commons-logging</artifactId>
+<groupId>commons-logging</groupId>
+</exclusion>
+</exclusions>
+</dependency>
 ```
 
 > 声明exclusion的时候，只需要指定groupId和artifactId，而不需要version，因为前两者就可以确定依赖关系图中的某个依赖。
@@ -190,7 +190,7 @@ Maven的聚合关系：
 #### 2. Define Constant Variable for Same Kind of Dependencies （为同类依赖“定义常量”）
 使用**properties**元素定义Maven属性，然后引入Maven属性。
 
-```
+```xml
 <properties>
 	    <spring.version>4.0.6.RELEASE</spring.version>
 </properties>
@@ -236,7 +236,7 @@ Maven提供的依赖管理功能使得我们能够很方便的配置自己的项
 
 通常通过**镜像**的方式将私服配置在用户范围的**settings.xml**文件中。
 
-```
+```xml
 <mirrors>
 	    <mirror>
 	        <id>nexus</id>
@@ -295,7 +295,7 @@ $  maven clean package -U
 
 也可以直接在**settings.xml**配置文件中设置对应的更新策略：
 
-```
+```xml
 <snapshots>
 	<enabled>true</enabled>
 	<updatePolicy>always</updatePolicy>
