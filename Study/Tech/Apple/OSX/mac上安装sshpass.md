@@ -1,7 +1,7 @@
 在mac上无法直接使用`homebrew`安装`sshpass`，但是可以变相的使用`brew install`来实现。实现方法如下：
 
 ```shell
-$ brew install https://raw.githubusercontent.com/eugeneoden/homebrew/eca9de1/Library/Formula/sshpass.rb
+$ brew install https://raw.githubusercontent.com/kadwanev/bigboybrew/master/Library/Formula/sshpass.rb
 ```
 
 这样，`sshpass`就安装在`/usr/local/Cellar/`目录下了，然后只需要**link**对应的shell command即可。
