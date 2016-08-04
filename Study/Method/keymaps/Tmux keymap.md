@@ -7,6 +7,8 @@
 - `tmux attach -t <target session>`：切换到某个会话
 - `prefix + d`：脱离会话
 - `prefix + ctrl-z`：挂起当前会话
+- `tmux ls` : list sessions.
+- `tmux kill-session -t <session name>` : kill session
 
 # 窗口window
 - `prefix + c`：新建窗口

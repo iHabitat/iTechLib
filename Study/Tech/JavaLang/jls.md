@@ -16,3 +16,5 @@ A **synchronized** method automatically performs a lock action when it is invoke
 The java language neither prevents nor requires detection of deadlock conditions.
  
 There are some other mechanisms, such as reads and writes of **volatile** variables and the use of  classes in the **java.util.concurrent** package, provide alternative ways of synchronization. 
+
+----
