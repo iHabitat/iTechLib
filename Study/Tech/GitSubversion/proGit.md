@@ -36,5 +36,6 @@ Git Branch Command
 4. `git branch --merged`: to see which branches are already merged into branch you're on.
 5. `git branch --no-merged`: to see all the branches that contain work you haven't yet merged in.
 6. `git checkout -b [branch] [remotename]/[branch]` or `git checkout --track [remotename]/[branch]`：set up other tracking branches, not **origin/master**
-7. 
+7. `git branch --list`: list git branches. `-r` with remote information, `-a` with all remote and local information.
+8. 
 
