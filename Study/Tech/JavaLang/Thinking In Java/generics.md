@@ -91,7 +91,7 @@ The attempt to create a `new T()` in **Erased.java** won't work, partly because 
 
 ### Arrays of generics
 
-The type token `Class<T>` is passed into the constructor in order to recover from the erasure, so that we can create the actual type of array that we need, although the warning from the cast must be suppressed with `@SuppressWarnings("unchecked")`. Once we do get the actual type, we can return it and get the desired results. The runtime type of array is the exact type `T[]`.
+The type token `Class<T>` is passed into the constructor in order to recover from the erasure, so that we can create the actual type of array that we need, although the warning from the cast must be suppressed with `@SuppressWarnings("unchecked")`. Once we do get the actual type, we can return it and get the desired results. The runtime type of array is the exact type `T[]`.
 
 ## Bounds
 
