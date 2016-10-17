@@ -2,6 +2,7 @@
 
 - [What are java generics?][]
 - [What is primary purpose of Java generics?][primary-purpose]
+- [What is benefit of using Java generics?][java-generics-benefit]
 
 ## What are java generics? ##
 
@@ -24,6 +25,15 @@ The use of Java generics language features were initially motivated by the need 
 - the weak and soft references in package `java.lang.ref`, which are special purpose references to objects of a particular type represented by a type parameter.
 - the interface `Callable` in package `java.util.concurrent`, which represents a task and has a `call` method that returns a result of a particular type represented by a type parameter.
 - the class `Class` in package `java.lang` is a generic class, whose type parameter denotes the type that `Class` object represents.
+	
+## What is the benefit of using Java generics? [java-generics-benefit] ##
 
+> Early error detection at compile time.
+
+Using parameterized type such as `LinkedList<String>`, instead of `LinkedList`, enables the compiler to perform more type checks and requires fewer dynamic casts. This way errors are detected earlier, in the sense that they are reported at compile-time by means of a compiler error message rather than at runtime by means of an exception.
+
+## What does type-safety mean? [what-does-type-safety-mean] ##
+
+> In Java, a program is considered type-safe if it compiles without errors and warnings and does not raise any unexpected `ClassCastException`s at runtime.
 
 --- Angelika Langer. *Java Generics Frequently Asked Questions*, 2015
