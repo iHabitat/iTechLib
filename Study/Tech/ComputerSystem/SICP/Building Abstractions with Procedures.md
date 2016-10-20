@@ -20,3 +20,38 @@ Every powerful language has three mechanisms for accomplishing this:
 - **primitive expressions**, which represent the simplest entities the language is concerned with.
 - **means of combinations**, by which compound elements are built from simpler ones.
 - **means of abstraction**, by which compound elements can ben named and manipulated as unit.
+ 
+Two kinds of elements in programming:
+
+- **data**: data is "stuff" that we want to manipulate.
+- **procedures**: procedures are description of the rules for manipulating the data.
+
+### 1.1.1 Expressions
+
+#### Combinations
+
+Expressions such as `(+ 300 46)`, `(/ 10 5)`, formed by delimiting a list of expressions within parentheses in order to denote procedure application, are called **combinations**. The leftmost element in the list is called **operator**, and the other elements are class **operands**.  The value  of a combination is obtained by applying the procedure specified by the operator to the arguments that are the values of the operands.
+
+#### Prefix notation
+
+Prefix notation have serval advantages:
+
+- it can accommodate procedures that may take an arbitrary number of arguments:
+ 
+```lisp
+(+ 5 4 3 7)
+19
+(\* 25 4 12)
+1200
+```
+
+- it extends in a straightforward way to allow combinations to be nested, that is, to have combinations whose elements are themselves combinations:
+ 
+```lisp
+(+ (* 3 5) (- 10 4))
+21
+```
+
+### 1.1.2 Naming and Environment
+
+
