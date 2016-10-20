@@ -57,3 +57,49 @@ The following types cannot be generic:
 - **Anonymous inner classes**: They can implement a parameterized interface or extend a parameterized class, but they cannot themselves be generic classes. A generic anonymous inner class would be nonsensical. Anonymous class do not have a name, but the name of a generic class is needed for declaring an instantiation of the class  and providing  the type arguments. Hence, generic anonymous classes would be pointless.
 - **Exception types**: A generic class must not directly or indirectly be derived from class `Throwable`. Generic exceptions or errors are disallowed because the exceptions handling mechanism is a runtime mechanism and the Java virtual machine doesn't know anything about Java generics. The JVM would not be capable of distinguishing between different instantiation of generic exception types. Hence, generic exception types would be pointless.
 - **Enum types**: Enum type cannot have type parameters. Conceptually, an enum and its enum values are `static`. Since type parameters cannot be used in any static context, the parameterization of an enum type would be pointless.
+ 
+### How is a generic type instantiated?
+
+> By providing a type argument per type parameter.
+
+The type argument list is a comma separated list that is delimited by angle brackets and follows the type name. The result is a so-called **parameterized type**.
+
+#### example of a generic type:
+
+```java
+class Pair<X, Y> {
+	private X first;
+	private Y second;}
+```
+
+#### example of a concrete parameterized type:
+
+```java
+public void printPair(Pair<String, Long> pair) {}	
+```
+
+and:
+
+```java
+Pair<String, Long> pair = new Pair<String, Long>("maxsize", 1024L);
+```
+
+#### wildcard instantiations
+
+In addition to concrete instantiation there so-called **wildcard instantiations**. They do not have concrete types as arguments, but so-called **wildcards**. A wildcard  is a syntactic construct with a `?` that denotes not just one type, but a family of types.
+
+Example of a wildcard parameterized type:
+
+```java
+public void printPair(Pair<?, ?> pair) {
+....
+}
+Pair<?, ?> pair = new Pair<String, Long>("maximum", 1024L);
+printPair(pair);
+```
+
+#### raw types
+
+It is permitted to leave out the type arguments altogether and not specify type arguments at all. A generic type without type arguments is called **raw type** and is only allowed for reasons of compatibility with non-generic  Java code.
+
+> Use of raw types is discouraged.
