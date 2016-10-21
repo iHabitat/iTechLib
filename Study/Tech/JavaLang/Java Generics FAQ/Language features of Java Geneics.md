@@ -102,4 +102,10 @@ printPair(pair);
 
 It is permitted to leave out the type arguments altogether and not specify type arguments at all. A generic type without type arguments is called **raw type** and is only allowed for reasons of compatibility with non-generic  Java code.
 
-> Use of raw types is discouraged.
+> Use of raw types is discouraged.### Why do instantiations of generic type share the same runtime type?
+
+> Because of **type erasure**.
+
+the compiler translates the generic and parameterized types by a technique called **type erasure**. Basically, the compiler elides all information related to type parameters and type arguments.
+
+For instance, `ArrayList<String>` and `ArrayList<Long>` have the same **raw type** `ArrayList` after the **type erasure**.
