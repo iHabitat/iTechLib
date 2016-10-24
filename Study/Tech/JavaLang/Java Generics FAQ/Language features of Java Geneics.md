@@ -155,3 +155,12 @@ After this successful cast we have a reference variable  of type `List<String>` 
 We are prepared to cope with `ClassCastException`s when there is a cast expression in the source code, but we do not expect `ClassCastException`s when we extract an element from a list of strings. This sort of unexpected `ClassCastException` is considered a violation of the type-safety principle. In order to draw attention to the potentially unsafe cast the compiler issues an "unchecked" warning when it translates the dubious cat expressions.
 
 As a result, **the compiler emits "unchecked" warnings for every dynamic cast whose target type is a parameterized type**. Note that an upcast whose target type is a parameterized type does not lead to an "unchecked" warning because the upcast has no dynamic part.
+
+### Can generic types have static members?
+
+> Yes.
+
+**Generic types can have static members, including static fields, static methods and static nested types**. Each of these static members exists once per enclosing type, that is, independently of the number of objects of the enclosing type and regardless of the number of instantiations of the generic type that may be used somewhere in the program. The name of the static member consists - as is usual for static members - of the scope (package and enclosing type) and the member's name. If the enclosing type is generic, then the type in the scope qualification must be the raw type, not a parameterized type.
+
+
+## Concrete Instantiations
