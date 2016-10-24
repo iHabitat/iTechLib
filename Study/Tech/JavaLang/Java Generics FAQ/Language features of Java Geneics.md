@@ -109,3 +109,49 @@ It is permitted to leave out the type arguments altogether and not specify type 
 the compiler translates the generic and parameterized types by a technique called **type erasure**. Basically, the compiler elides all information related to type parameters and type arguments.
 
 For instance, `ArrayList<String>` and `ArrayList<Long>` have the same **raw type** `ArrayList` after the **type erasure**.
+
+### Can I cast to a parameterized type?
+
+> Yes, you can, but under certain circumstances it is not type-safe and the compiler issues an "unchecked" warning.
+
+All instantiations of a generic type share the same runtime type representation, namely representation of the **raw type**. For instance, the instantiations of generic type `List`, such as `List<String>`, `List<Long>`, `List<Date` etc. have different **static types** at compile time, but the same **dynamic type** `List` at runtime.
+
+A cast consists two parts:
+
+- a static type check performed by the compiler at compile time 
+- a dynamic type check performed by the Java Virtual Machine at runtime.
+ 
+The static part sorts out nonsensical casts, that can not succeed. Such as the cast from `String` to `Date` or from `List<String>` to `List<Date>`.
+
+The dynamic part uses the runtime type information and performs a type check at runtime. It raises a `ClassCastException` if the dynamic type of the object is not the target type (or a subtype of the target type) of the cast. Examples of casts with a dynamic part are cast from `Object` to `String` or from `Object` to `List<String>`. There are the so-called **downcasts**, **from a supertype down to a subtype.**
+
+Not all casts have a dynamic part. **Some casts are just static casts and require no type check at runtime**. Examples are the casts between primitive types, such as the cast from `long` to `int`, or `byte` to `char`. Another example of static casts are the so-called **upcasts**, **from a subtype up to a supertype**, such as the casts from `String` to `Object` or from `LinkedList<String>` to `List<String>`. **Upcasts are casts that are permitted, but not required**. They are automatic conversions that the compiler performs implicitly, even without an explicit cast expression in the source code, which means, the cast is not required and usually omitted. However, if an upcast appears somewhere in the source code then it is a purely static cast that does not have a dynamic part.
+
+**Type casts with a dynamic part are potentially unsafe, when the target type of the cast is a parameterized type**. The runtime type information of a parameterized type is non-exact, because all instantiations of the same generic type share the same runtime type representation. The virtual machine cannot distinguish between different instantiations of the same generic type. Under circumstances the dynamic part of a cast can succeed although it should not.
+
+Example of unchecked cast:
+
+```java
+void m1() {
+	List<Date> list = new ArrayList<Date>();
+	...
+	m2(list);}
+void m2(Object arg) {
+	...
+	List<String> list = (List<String>) arg;  //unchecked warning
+	...
+	m3(list);
+	...}
+void m3(List<String> list) {
+	...
+	String s = list.get(0); // ClassCastException
+	...}
+```
+
+The cast from `Object` to `List<String>` in method `m2` looks like a cast to `List<String>` , but actually is a cast from `Object` to the raw type `List`. It would succeed even if the object referred to were a `List<Date>` instead of a `List<String>`.
+
+After this successful cast we have a reference variable  of type `List<String>` which refers to an object of type `List<Date>`. When we retrieve elements from that list we would expect `String`s, but in fact we receive `Date`s and a `ClassCastException` will occur in a place where nobody had expected it.
+
+We are prepared to cope with `ClassCastException`s when there is a cast expression in the source code, but we do not expect `ClassCastException`s when we extract an element from a list of strings. This sort of unexpected `ClassCastException` is considered a violation of the type-safety principle. In order to draw attention to the potentially unsafe cast the compiler issues an "unchecked" warning when it translates the dubious cat expressions.
+
+As a result, **the compiler emits "unchecked" warnings for every dynamic cast whose target type is a parameterized type**. Note that an upcast whose target type is a parameterized type does not lead to an "unchecked" warning because the upcast has no dynamic part.
