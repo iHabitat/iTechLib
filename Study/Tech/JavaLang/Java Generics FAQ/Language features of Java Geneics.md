@@ -164,3 +164,48 @@ As a result, **the compiler emits "unchecked" warnings for every dynamic cast wh
 
 
 ## Concrete Instantiations
+
+### What is a concrete parameterized type?
+
+> A instantiation of a generic type where all type arguments are concrete type rather than wildcards.
+
+Examples of concrete parameterized types are `List<String>` or `Map<String, Date>`, not `List<? extends Number>` or `Map<String, ?>`.
+
+### Is `List<Object>` a supertype of `List<String>`?
+
+> No, different instantiations of the same generic type for different concrete type arguments have no type relationship.
+
+#### Arrays are covariant but parameterized types are not covariant
+
+The array `Object[]` is a supertype of the array `String[]`, because `Object` is a supertype of `String`. This type relationship is known as **covariance**. The super-subtype-relationship of the component types extends into the corresponding array types. No such a relationship exists for instantiations of generic types.
+
+#### Various consequences of lacking the super-subtype-relationship
+
+Example:
+
+```java
+void printAll(List<Object> list) {
+	for(Object o : list) {
+		System.out.println(o);	}}
+ArrayList<String> list = new ArrayList<String>();
+... fill list ...
+printAll(list);  //error
+```
+
+A `ArrayList<String>` object cannot be passed as argument to a method that ask for `ArrayList<Object>` because the two types are instantiations of same generic type, but for different type arguments, and for this reason they are not compatible with each other.
+
+On the other hand, instantiations of different generic types for the same type argument can be compatible.
+Example:
+
+```java
+void printAll(Collection<Object> c) {
+	for(Object o : c) {
+		System.out.println(o);	}}
+List<String> list = new ArrayList<String>();
+... fill list ...
+printAll(list); //fine
+```
+
+A `List<Object>` is compatible to a `Collection<Object>` because the two types are instantiations of a generic supertype and its generic subtype and the instantiations are for the same type argument `Object`.
+
+> Compatibility between instantiations of the same generic type exist only among wildcard instantiations and concrete instantiations that belong to the family of instantiations that the wildcard instantiation denotes. 
