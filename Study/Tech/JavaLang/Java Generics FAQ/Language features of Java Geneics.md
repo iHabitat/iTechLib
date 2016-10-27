@@ -209,3 +209,53 @@ printAll(list); //fine
 A `List<Object>` is compatible to a `Collection<Object>` because the two types are instantiations of a generic supertype and its generic subtype and the instantiations are for the same type argument `Object`.
 
 > Compatibility between instantiations of the same generic type exist only among wildcard instantiations and concrete instantiations that belong to the family of instantiations that the wildcard instantiation denotes. 
+
+### Can I use a concrete parameterized type like any other type?
+
+> Almost.
+
+They can **not** be used for the following purposes:
+
+- for creation of arrays
+- in exception handling
+- in a class literal 
+- in a `instanceof` expression
+ 
+### Can I create an array whose component type is a concrete parameterized type?
+
+> No, because it is not type-safe.
+
+Arrays are **covariant**, so `Object[]` is a supertype of `String[]` and a string array can be accessed through a reference variable of type `Object[]`.
+
+Example of covariant arrays:
+
+```java
+Object[] objArr = new String[10]; //fine
+objArr[0] = new String();
+```
+
+The runtime type information regarding the component type is used when elements are stored in an array in order to ensure that no "alien" elements can be inserted.
+
+Example of array store check:
+
+```java
+Object[] objArr = new String[10];
+objArr[0] = new Long(0L); //Compiles; fails at runtime with ArrayStoreException
+```
+
+The reference variable of type `Object[]` refers to a `String[]`, which means that only strings are permitted as elements of the array. When an element is inserted into the array, the information about the array's component type is used to perform a type check - the so-called **array store check**.
+
+Problems arise when an array holds elements whose type is a concrete parameterized type. Because of **type erasure**, parameterized types do not have exact runtime type information. As a consequence, the array store check does not work because it uses the dynamic type information regarding the array's (non-exact) component type for the array store check.
+
+Example of array store check in case of parameterized component type:
+
+```java
+Pair<Integer, Integer>[] intPairArr = new Pair<Integer, Integer>[10]; //illegal
+Object[] objArr = intPairArr;
+objArr[0] = new Pair<String, String>(","); //should fail, but would succeed
+```
+
+Since we are trying to add a `Pair<String, String>` to a `Pair<Integer, Integer>[]` we would expect that the type check fails. However, the JVM cannot detect any type mismatch here: **at runtime, after type erasure, `objArr` would be have the dynamic type `Pair[]` and the element to be stored has the matching dynamic type `Pair`. Hence the store check succeeds, although it should not.
+
+In order to prevent programs that are not type-safe all arrays holding elements whose type is a concrete parameterized type are illegal. For the same reason, arrays holding elements whose type is a wildcard parameterized type are banned, too. Only arrays with an **unbounded wildcard parameterized type** as the component type are permitted.
+
