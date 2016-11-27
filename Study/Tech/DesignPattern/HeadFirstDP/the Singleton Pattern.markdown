@@ -33,28 +33,28 @@ public class Singleton {
 ```
 
 ## synchronization is expensive, a few options to improve multithreading
-1.Do nothing if the performance of getInstance() isn't critical to application
-2.Move to an eagerly created instance rather than a lazily created one
 
-```
+1. Do nothing if the performance of getInstance() isn't critical to application
+
+2. Move to an eagerly created instance rather than a lazily created one
+
+```java
 public class Singleton {
         private static Singleton uniqueInstance = new Singleton();
-        
-        //other fields
-        
-        private Singleton() {}
-
+        //other fields   
+        private Singleton() {}    
         public static synchronized Singleton getInstance() {
             return uniqueInstance;
         }
-
         //other methods
 }
 ```
-the JVM guarantees that the instance will be created before any thread accesses the static uniqueInstance variable.
-3.Use "double-checked locking" to reduce the use of synchronization in getInstance()
 
-```
+the JVM guarantees that the instance will be created before any thread accesses the static uniqueInstance variable.
+
+3. Use "double-checked locking" to reduce the use of synchronization in getInstance()
+
+```java
 public class Singleton {
     // the volatile keyword ensures that multiple threads handle the uniqueInstance variable
     // correctly when it is being initialized to the Singleton instance.

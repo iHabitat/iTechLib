@@ -259,3 +259,65 @@ Since we are trying to add a `Pair<String, String>` to a `Pair<Integer, Integer>
 
 In order to prevent programs that are not type-safe all arrays holding elements whose type is a concrete parameterized type are illegal. For the same reason, arrays holding elements whose type is a wildcard parameterized type are banned, too. Only arrays with an **unbounded wildcard parameterized type** as the component type are permitted.
 
+
+### Can I declare a reference variable of an array type whose component type is a concrete parameterized type?
+
+> Yes, you can, but you should not, because it is neither helpful nor type-safe.
+
+You can declare a reference variable of an array type whose component type is a concrete parameterized type. Arrays of such a type must not be created. Hence, this reference variable cannot refer to an array of its type. All that it can refer to is `null`, an array whose component type is a non-parameterized subtype of the concrete parameterized type, or an array whose type is the corresponding raw type. Neither of these case is overly useful, yet they are permitted.
+
+Example of an array reference variable with parameterized component type:
+
+```java
+Pair<String, String>[] arr = null;  // fine
+arr = new Pair<String, String>[2]; // error: generic array creation
+```
+the code shows that ** a reference variable of type `Pair<String, String>[]` can be declared, but the creation of such an array is rejected.** But we can have the reference variable of type `Pair<String, String>[]` refer to an array of a non-parameterized subtype.
+
+Example of another array reference variable with parameterized component type:
+
+```java
+class Name extends Pair<String, String> {...}
+Pair<String, String>[] arr = new Name[2]; // fine
+```
+Which raises the question: how useful is such an array variable if it never refers to an array of its type? Let's consider an example:
+
+Example of an array reference variable refering to array of subtypes; not recommended:
+
+```java
+void printArrayOfStringPairs(Pair<String, String>[] pa) {
+	for (Pair<String, String> p : pa) {
+		if (p != null) {
+			println(p.getFirst() + " " + p.getSecond());		}	}}
+Pair<String, String>[] createArrayOfStringPairs() {
+	Pair<String, String>[] arr = new Name[2];
+	arr[0] = new Name("Tim", "Duncan"); //fine
+	arr[1] = new Pair<String, String>("a", "b"); //fine, (but cause ArrayStoreException)
+	return arr;}
+void extractStringPairFromArray(Pair<String, String>[] arr) {
+	Name name = (Name)arr[0];
+	Pair<String, String> p1 = arr[1]; //fine}
+void test() {
+	Pair<String, String>[] arr = createArrayOfStringPairs();
+	printArrayOfStringPairs(arr);
+	extractStringPairsFromArray(arr);}
+```
+
+Example improved:
+
+```java
+void printArrayOfStringPairs(Pair<String, String>[] pa) {
+	for (Pair<String, String> p : pa) {
+		if (p != null)
+			println(p.getFirst() + " " + p.getSecond());	}}
+Name[] createArrayOfStringPairs() {
+	Name[] arr = new Name[2];
+	arr[0] = new Name("tim", "duncan");
+	arr[1] = new Pair<String, String>("a", "b"); // error
+	return arr;}
+void extractStringPairsFromArray(Name[] arr) {
+	Name name = arr[0]; // fine (needs no cast)
+	Pair<String, String> p1 = arr[1];}
+```
+
+Since an array reference variable whose component type is a concrete parameterized type can never refer to an array of its type, such a reference variable does not really make sense. No matter how you put it, you should better refrain from using array reference variable whose component type is a concrete parameterized type. **Note, that the same holds for array reference variable whose component type is a wildcard parameterized type**. Only array reference variable whose component type is an **unbounded wildcard** parameterized type make sense.
