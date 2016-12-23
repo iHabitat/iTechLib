@@ -40,4 +40,11 @@ This gives you great flexibility in choosing the class of the returned object.
 
 > Interfaces can't have static methods, so by convention, static factory methods for an interface named `Type` are put in a noninstantiable class named `Types`. For example, the class  `java.util.Collections` in Java Collections Framework and the Guava's `ImmutableList` class.
 
+**Not only can the class of an object returned by a public static factory method be nonpublic, but the class can vary from invocation to invocation depending on the values of the parameters to the static factory**. This feature is indicated obviously by the class `java.util.EnumSet`.
+
+The class of the object returned by a static factory method need not even exist at the time the class containning the method is written. Such flexible static factory methods from the basis of *service provider frameworks*, such as the Java Database Connectivity API（JDBC）.
+
+
+
+
   
