@@ -9,15 +9,16 @@
 A generic type is a **reference type** that has one or more type parameters. These type parameters are later replaced by type arguments when the generic type is instantiated ( or declared).
 
 - Example of a generic type:
- 
+
 ```java
 interface Collection<E> {
-	public void add(E e);
-	public Iterator<E> iterate();}
+ public void add(E e);
+ public Iterator<E> iterate();
+}
 ```
 
 - Example of a parameterized type:
- 
+
 ```java
 Collection<String> collection = new LinkedList<String>();
 ```
@@ -32,20 +33,27 @@ Example:
 
 ```java
 class Pair<X, Y> {
-	private X first;
-	private Y second;
-	public Pair(X x, Y y) {
-		this.first = x;
-		this.second = y;	}
-	public X getFirst() {
-		return first;	}
-	public Y getSecond() {
-		return second;	}	
-	public void setFirst(X x) {
-		this.first = x;	}
-	public void setSecond(Y y) {
-		this.second = y;	}}
+ private X first;
+ private Y second;
+ public Pair(X x, Y y) {
+  this.first = x;
+  this.second = y;
+ }
+ public X getFirst() {
+  return first;
+ }
+ public Y getSecond() {
+  return second;
+ } 
+ public void setFirst(X x) {
+  this.first = x;
+ }
+ public void setSecond(Y y) {
+  this.second = y;
+ }
+}
 ```
+
 ### Are there any types that cannot have type parameters?
 
 > All types, except enum types, anonymous inner classes and exception classes, can be generic...
@@ -57,25 +65,26 @@ The following types cannot be generic:
 - **Anonymous inner classes**: They can implement a parameterized interface or extend a parameterized class, but they cannot themselves be generic classes. A generic anonymous inner class would be nonsensical. Anonymous class do not have a name, but the name of a generic class is needed for declaring an instantiation of the class  and providing  the type arguments. Hence, generic anonymous classes would be pointless.
 - **Exception types**: A generic class must not directly or indirectly be derived from class `Throwable`. Generic exceptions or errors are disallowed because the exceptions handling mechanism is a runtime mechanism and the Java virtual machine doesn't know anything about Java generics. The JVM would not be capable of distinguishing between different instantiation of generic exception types. Hence, generic exception types would be pointless.
 - **Enum types**: Enum type cannot have type parameters. Conceptually, an enum and its enum values are `static`. Since type parameters cannot be used in any static context, the parameterization of an enum type would be pointless.
- 
+
 ### How is a generic type instantiated?
 
 > By providing a type argument per type parameter.
 
 The type argument list is a comma separated list that is delimited by angle brackets and follows the type name. The result is a so-called **parameterized type**.
 
-#### example of a generic type:
+#### example of a generic type
 
 ```java
 class Pair<X, Y> {
-	private X first;
-	private Y second;}
+ private X first;
+ private Y second;
+}
 ```
 
-#### example of a concrete parameterized type:
+#### example of a concrete parameterized type
 
 ```java
-public void printPair(Pair<String, Long> pair) {}	
+public void printPair(Pair<String, Long> pair) {} 
 ```
 
 and:
@@ -102,7 +111,9 @@ printPair(pair);
 
 It is permitted to leave out the type arguments altogether and not specify type arguments at all. A generic type without type arguments is called **raw type** and is only allowed for reasons of compatibility with non-generic  Java code.
 
-> Use of raw types is discouraged.### Why do instantiations of generic type share the same runtime type?
+> Use of raw types is discouraged.
+
+### Why do instantiations of generic type share the same runtime type?
 
 > Because of **type erasure**.
 
@@ -118,9 +129,9 @@ All instantiations of a generic type share the same runtime type representation,
 
 A cast consists two parts:
 
-- a static type check performed by the compiler at compile time 
+- a static type check performed by the compiler at compile time
 - a dynamic type check performed by the Java Virtual Machine at runtime.
- 
+
 The static part sorts out nonsensical casts, that can not succeed. Such as the cast from `String` to `Date` or from `List<String>` to `List<Date>`.
 
 The dynamic part uses the runtime type information and performs a type check at runtime. It raises a `ClassCastException` if the dynamic type of the object is not the target type (or a subtype of the target type) of the cast. Examples of casts with a dynamic part are cast from `Object` to `String` or from `Object` to `List<String>`. There are the so-called **downcasts**, **from a supertype down to a subtype.**
@@ -133,19 +144,22 @@ Example of unchecked cast:
 
 ```java
 void m1() {
-	List<Date> list = new ArrayList<Date>();
-	...
-	m2(list);}
+ List<Date> list = new ArrayList<Date>();
+ ...
+ m2(list);
+}
 void m2(Object arg) {
-	...
-	List<String> list = (List<String>) arg;  //unchecked warning
-	...
-	m3(list);
-	...}
+ ...
+ List<String> list = (List<String>) arg;  //unchecked warning
+ ...
+ m3(list);
+ ...
+}
 void m3(List<String> list) {
-	...
-	String s = list.get(0); // ClassCastException
-	...}
+ ...
+ String s = list.get(0); // ClassCastException
+ ...
+}
 ```
 
 The cast from `Object` to `List<String>` in method `m2` looks like a cast to `List<String>` , but actually is a cast from `Object` to the raw type `List`. It would succeed even if the object referred to were a `List<Date>` instead of a `List<String>`.
@@ -161,7 +175,6 @@ As a result, **the compiler emits "unchecked" warnings for every dynamic cast wh
 > Yes.
 
 **Generic types can have static members, including static fields, static methods and static nested types**. Each of these static members exists once per enclosing type, that is, independently of the number of objects of the enclosing type and regardless of the number of instantiations of the generic type that may be used somewhere in the program. The name of the static member consists - as is usual for static members - of the scope (package and enclosing type) and the member's name. If the enclosing type is generic, then the type in the scope qualification must be the raw type, not a parameterized type.
-
 
 ## Concrete Instantiations
 
@@ -185,8 +198,10 @@ Example:
 
 ```java
 void printAll(List<Object> list) {
-	for(Object o : list) {
-		System.out.println(o);	}}
+ for(Object o : list) {
+  System.out.println(o);
+ }
+}
 ArrayList<String> list = new ArrayList<String>();
 ... fill list ...
 printAll(list);  //error
@@ -199,8 +214,10 @@ Example:
 
 ```java
 void printAll(Collection<Object> c) {
-	for(Object o : c) {
-		System.out.println(o);	}}
+ for(Object o : c) {
+  System.out.println(o);
+ }
+}
 List<String> list = new ArrayList<String>();
 ... fill list ...
 printAll(list); //fine
@@ -208,7 +225,7 @@ printAll(list); //fine
 
 A `List<Object>` is compatible to a `Collection<Object>` because the two types are instantiations of a generic supertype and its generic subtype and the instantiations are for the same type argument `Object`.
 
-> Compatibility between instantiations of the same generic type exist only among wildcard instantiations and concrete instantiations that belong to the family of instantiations that the wildcard instantiation denotes. 
+> Compatibility between instantiations of the same generic type exist only among wildcard instantiations and concrete instantiations that belong to the family of instantiations that the wildcard instantiation denotes.
 
 ### Can I use a concrete parameterized type like any other type?
 
@@ -218,9 +235,9 @@ They can **not** be used for the following purposes:
 
 - for creation of arrays
 - in exception handling
-- in a class literal 
+- in a class literal
 - in a `instanceof` expression
- 
+
 ### Can I create an array whose component type is a concrete parameterized type?
 
 > No, because it is not type-safe.
@@ -259,7 +276,6 @@ Since we are trying to add a `Pair<String, String>` to a `Pair<Integer, Integer>
 
 In order to prevent programs that are not type-safe all arrays holding elements whose type is a concrete parameterized type are illegal. For the same reason, arrays holding elements whose type is a wildcard parameterized type are banned, too. Only arrays with an **unbounded wildcard parameterized type** as the component type are permitted.
 
-
 ### Can I declare a reference variable of an array type whose component type is a concrete parameterized type?
 
 > Yes, you can, but you should not, because it is neither helpful nor type-safe.
@@ -272,7 +288,8 @@ Example of an array reference variable with parameterized component type:
 Pair<String, String>[] arr = null;  // fine
 arr = new Pair<String, String>[2]; // error: generic array creation
 ```
-the code shows that ** a reference variable of type `Pair<String, String>[]` can be declared, but the creation of such an array is rejected.** But we can have the reference variable of type `Pair<String, String>[]` refer to an array of a non-parameterized subtype.
+
+the code shows that **a reference variable of type `Pair<String, String>[]` can be declared, but the creation of such an array is rejected.** But we can have the reference variable of type `Pair<String, String>[]` refer to an array of a non-parameterized subtype.
 
 Example of another array reference variable with parameterized component type:
 
@@ -280,44 +297,55 @@ Example of another array reference variable with parameterized component type:
 class Name extends Pair<String, String> {...}
 Pair<String, String>[] arr = new Name[2]; // fine
 ```
+
 Which raises the question: how useful is such an array variable if it never refers to an array of its type? Let's consider an example:
 
 Example of an array reference variable refering to array of subtypes; not recommended:
 
 ```java
 void printArrayOfStringPairs(Pair<String, String>[] pa) {
-	for (Pair<String, String> p : pa) {
-		if (p != null) {
-			println(p.getFirst() + " " + p.getSecond());		}	}}
+ for (Pair<String, String> p : pa) {
+  if (p != null) {
+   println(p.getFirst() + " " + p.getSecond());
+  }
+ }
+}
 Pair<String, String>[] createArrayOfStringPairs() {
-	Pair<String, String>[] arr = new Name[2];
-	arr[0] = new Name("Tim", "Duncan"); //fine
-	arr[1] = new Pair<String, String>("a", "b"); //fine, (but cause ArrayStoreException)
-	return arr;}
+ Pair<String, String>[] arr = new Name[2];
+ arr[0] = new Name("Tim", "Duncan"); //fine
+ arr[1] = new Pair<String, String>("a", "b"); //fine, (but cause ArrayStoreException)
+ return arr;
+}
 void extractStringPairFromArray(Pair<String, String>[] arr) {
-	Name name = (Name)arr[0];
-	Pair<String, String> p1 = arr[1]; //fine}
+ Name name = (Name)arr[0];
+ Pair<String, String> p1 = arr[1]; //fine
+}
 void test() {
-	Pair<String, String>[] arr = createArrayOfStringPairs();
-	printArrayOfStringPairs(arr);
-	extractStringPairsFromArray(arr);}
+ Pair<String, String>[] arr = createArrayOfStringPairs();
+ printArrayOfStringPairs(arr);
+ extractStringPairsFromArray(arr);
+}
 ```
 
 Example improved:
 
 ```java
 void printArrayOfStringPairs(Pair<String, String>[] pa) {
-	for (Pair<String, String> p : pa) {
-		if (p != null)
-			println(p.getFirst() + " " + p.getSecond());	}}
+ for (Pair<String, String> p : pa) {
+  if (p != null)
+   println(p.getFirst() + " " + p.getSecond());
+ }
+}
 Name[] createArrayOfStringPairs() {
-	Name[] arr = new Name[2];
-	arr[0] = new Name("tim", "duncan");
-	arr[1] = new Pair<String, String>("a", "b"); // error
-	return arr;}
+ Name[] arr = new Name[2];
+ arr[0] = new Name("tim", "duncan");
+ arr[1] = new Pair<String, String>("a", "b"); // error
+ return arr;
+}
 void extractStringPairsFromArray(Name[] arr) {
-	Name name = arr[0]; // fine (needs no cast)
-	Pair<String, String> p1 = arr[1];}
+ Name name = arr[0]; // fine (needs no cast)
+ Pair<String, String> p1 = arr[1];
+}
 ```
 
 Since an array reference variable whose component type is a concrete parameterized type can never refer to an array of its type, such a reference variable does not really make sense. No matter how you put it, you should better refrain from using array reference variable whose component type is a concrete parameterized type. **Note, that the same holds for array reference variable whose component type is a wildcard parameterized type**. Only array reference variable whose component type is an **unbounded wildcard** parameterized type make sense.

@@ -13,8 +13,9 @@ private final Collection stamps = ...;
 stamps.add(new Coin(...));
 
 for(Iterator i = stamps.iterator(); i.hasNext();) {
-	Stamp s = (Stamp)i.next(); // Throws ClassCastException
-	... // Do something with the stam}
+ Stamp s = (Stamp)i.next(); // Throws ClassCastException
+ ... // Do something with the stam
+}
 ```
 
 **As mentioned throughout this book, it pays to discover errors as soon as possible after they are made, ideally at compile time.** In this case, you don't discover the error until JVM throws `ClassCastException` at runtime.
@@ -34,13 +35,17 @@ As an added benefit, you no longer have to cast manually when removing elements 
 
 ```java
 for (Stamp s : stamps) { // No cast
-	... // Do something with the stamp} 
+ ... // Do something with the stamp
+} 
 ```
-or 
+
+or
+
 ```java
 for(Iterator<Stamp> i = stamps.iterator(); i.hasNext(); ) {
-	Stamp s = i.next(); // No cast necessary
-	... // Do something with the stamp}
+ Stamp s = i.next(); // No cast necessary
+ ... // Do something with the stamp
+}
 ```
 
 **If you use raw types, you lose all the safety and expressiveness benefits of generics**.
@@ -61,11 +66,14 @@ You might be tempted to use a raw type for a collection whose element type is un
 ```java
 // Use of raw type for unknown element type -- don't do this!
 static int numElementsInCommon(Set s1, Set s2) {
-	int result = 0;
-	for(Object o1: s1) {
-		if(s2.contains(o1)) {
-			result++;		}	}
-	return result;}
+ int result = 0;
+ for(Object o1: s1) {
+  if(s2.contains(o1)) {
+   result++;
+  }
+ }
+ return result;
+}
 ```
 
 If you want to use a generic type but you don't know or care what the actual type parameter is, you can use the **unbounded wildcard types** with a question mark. For example, the unbounded wildcard type for the generic type `Set<E>` is `Set<?>`(read "set of some type"). It is the most general parameterized `Set` type, capable of holding any set.
@@ -73,18 +81,21 @@ If you want to use a generic type but you don't know or care what the actual typ
 ```java
 //Unbounded wildcard type -- typesafe and flexible
 static int numElementsInCommon(Set<?> s1, Set<?> s2) {
-	int result = 0;
-	for(Object o1 : s1) {
-		if(s2.contains(o1)) {
-			result++;		}	}
-	return result;}
+ int result = 0;
+ for(Object o1 : s1) {
+  if(s2.contains(o1)) {
+   result++;
+  }
+ }
+ return result;
+}
 ```
 
 **You can't put any element (other than `null`) into a `Collection<?>`.**
 
-## Exceptions 
+## Exceptions
 
-There are two minor exceptions to the rule that you should not use raw types in new code, both of which stem from the fact that generic type information is erased at runtime. 
+There are two minor exceptions to the rule that you should not use raw types in new code, both of which stem from the fact that generic type information is erased at runtime.
 
 - **You must use raw types in class literals.** In other words, `List.class`, `String[].class` and `int.class` are all legal, but `List<String>.class` and `List<?>.class` are not.
 
@@ -93,14 +104,15 @@ There are two minor exceptions to the rule that you should not use raw types in 
 ```java
 //Legitimate use of raw type -- instanceof operator
 if (o instanceof Set) { // Raw type
-	Set<?> m = (Set<?>)o; // Wildcard type
-	...}
+ Set<?> m = (Set<?>)o; // Wildcard type
+ ...
+}
 ```
+
 Note that once you've determined that `o` is a `Set`, you must cast it to the wildcard type `Set<?>`, not the raw type `Set`. This is a checked cast, so it will not cause a compiler warning.
 
 ## Summary
 
 Using raw types can lead to exceptions at runtime, so don't use them in new code. They are provided only for compatibility and interoperability with legacy code that predates the introduction of generics.
-
 
 [^exemplary]: serving as a desirable model; representing the best of its kind

@@ -1,2 +1,0 @@
-- `docker version`: show the version information of docker.
-- `docker ps`: shows only currently running containers.

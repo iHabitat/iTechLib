@@ -1,9 +1,11 @@
 # 闭包
+
 本章介绍Groovy的闭包机制。所谓**闭包**，是指一段开放的、匿名的代码块，它可以拥有参数、返回值或者直接被赋值给一个变量使用。与其他常见的闭包不同，Groovy中的`Closure`不但可以引用在其内部作用域中声明的变量，而且也可以包含任何在其作用域之外定义的变量。除此之外，它还提供了一系列其他的优点，本章稍后将会详细介绍。
 
 ## 1. 语法
 
 ### 1.1. 定义闭包
+
 闭包的定义遵从以下语法格式：
 
 ```
@@ -17,14 +19,18 @@
 如下示例展示了正确定义闭包的方式：
 
 ```
-1. { item++ }  2. { -> item++ }
+1. { item++ }  
+2. { -> item++ }
 3. { println it }
 4. { it -> println it }
 5. { name -> println name }
 6. { String x, int y ->
-	println "hey ${x} the value is ${y}"	}7. { reader -> 
-		def line = reader.readLine()
-		line.trim()	}
+ println "hey ${x} the value is ${y}"
+ }
+7. { reader -> 
+  def line = reader.readLine()
+  line.trim()
+ }
 ```
 
 > 1. 引用了一个名叫item的变量的闭包
@@ -35,14 +41,17 @@
 > 6. 接受了两个有类型的参数的闭包
 > 7. 一个闭包可以包含多条语句
 
-### 1.2. 把闭包当做一个对象尽管闭包是一段代码块，但它本质上是`groovy.lang.Closure`类的一个实例，因此可以将它像其他变量一样赋给另一个变量或字段。
+### 1.2. 把闭包当做一个对象
+
+尽管闭包是一段代码块，但它本质上是`groovy.lang.Closure`类的一个实例，因此可以将它像其他变量一样赋给另一个变量或字段。
 
 ```groovy
 1. def listener = { e -> println "clicked on $e.source" }
-	assert listener instance Closure
+ assert listener instance Closure
 2. Closure callback = { println 'Done!' }
 3. Closure<Boolean> isTextFile = {
-		File it -> it.name.endsWith('.txt')	}
+  File it -> it.name.endsWith('.txt')
+ }
 ```
 
 > 1. 可以将一个闭包赋给一个变量，因为闭包是`groovy.lang.Closure`类的实例
@@ -50,12 +59,13 @@
 > 3. 你还可以视情况而定，利用`groovy.lang.Closure`的泛型类型为闭包指定返回值
 
 ### 1.3. 调用闭包
+
 闭包作为一段**匿名代码块**，可以像调用其他方法一样被调用。如果你定义了如下没有带任何参数的闭包：
 
 ```groovy
 def code = { 123 }
 ```
-	
+ 
 那么当你调用这个闭包的时候，它里面的代码才会被执行。你可以通过类似调用常规的方法的方式调用闭包：
 
 ```groovy
@@ -78,7 +88,9 @@ assert code.call() == 123
 4. def isEven = { it%2 == 0}
 5. assert isEven(3) == false
 6. assert isEven.call(2) == true
-```> 1. 定义一个闭包，它接受了一个类型为`int`的参数
+```
+
+> 1. 定义一个闭包，它接受了一个类型为`int`的参数
 > 2. 闭包`isOdd`可以直接被调用
 > 3. 也可以使用`call`方法来调用
 > 4. 同样的规则适用于匿名参数`it`
@@ -90,6 +102,7 @@ assert code.call() == 123
 ## 2. 参数
 
 ### 2.1. 常规参数
+
 闭包的参数遵从了和常规方法的参数一样的规则：
 
 - 可选的类型
@@ -118,6 +131,7 @@ assert closureWithTwoArgsAndDefaultValue(1) == 3
 ```
 
 ### 2.2. 隐式参数
+
 当闭包没有显式地定义参数列表时(使用`->`)，它总是会指定一个**匿名**的参数，取名叫`it`。这就意味着如下的代码：
 
 ```groovy
@@ -126,17 +140,22 @@ assert greeting('Patrick') == 'hello, Patrick!'
 ```
 
 完全等同于下面的代码：
-```groovy
+
+```groovy
 def greeting = { it -> "hello, $it!" }
 assert greeting('Patrick') == 'hello, Patrick!'
 ```
 
-如果你想定义一个**不带任何参数**的闭包，而且必须保证在调用时也没有任何参数，那么你必须要**显式**的声明闭包的**空参数列表**：```groovy
+如果你想定义一个**不带任何参数**的闭包，而且必须保证在调用时也没有任何参数，那么你必须要**显式**的声明闭包的**空参数列表**：
+
+```groovy
 def magicNumber = { -> 42 }
 // 这中调用方式将会失败，因为闭包不接受任何的参数
-magicNumber(11)```
+magicNumber(11)
+```
 
 ### 2.3. 可变参数
+
 像其他任何**方法**一样，可以为闭包声明可变的参数。**可变参方法**是指那些可以接受若干个参数，且最后的参数长度可变（或者是数组）的方法，就像如下的示例所示：
 
 ```groovy
@@ -144,15 +163,20 @@ magicNumber(11)```
 2. assert concat1('abc', 'def') == 'abcdef'
 3. def concat2 = { String[] args -> args.join('') }
 4. assert concat2('abc', 'def') == 'abcdef'
-		def multiConcat = { int n, Strring... args -> 
-		args.join('')*n	}
-	assert multiConcat(2, 'abc', 'def') == 'adcdefabcdef'
+  def multiConcat = { int n, Strring... args -> 
+  args.join('')*n
+ }
+ assert multiConcat(2, 'abc', 'def') == 'adcdefabcdef'
 ```
 
 > 1. 该闭包接受多个字符串作为第一个参数
 > 2. 可以带上若干个参数来调用这个闭包，而不需要显式的将参数封装在一个数组中
 > 3. 和上面具有相同行为的闭包，不过这里使用了数组方式作为参数
-> 4. 最后的那个参数是一个等同于数组的、显式的、可变长的参数## 3. 委托机制### 3.1. Groovy闭包 VS lambda表达式
+> 4. 最后的那个参数是一个等同于数组的、显式的、可变长的参数
+
+## 3. 委托机制
+
+### 3.1. Groovy闭包 VS lambda表达式
 
 如前面所说，Groovy中的闭包是作为[Closure类的实例](http://www.groovy-lang.org/closures.html#closure-as-object)存在的。这使得它和[Java8中的lambda表达式](http://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html)有着很大的区别。**委托(delegate)**是Groovy闭包中很重要的概念，但它和lambda中的delegate不同。Groovy具有修改闭包的委托（亦称**代理**）或委托策略的能力，这使得在Groovy中设计优美的**领域定义语言（DSL）**成为一种可能。
 
@@ -171,29 +195,29 @@ magicNumber(11)```
 ```groovy
 class Enclosing {
     void run() {
-    	def whatIsThisObject = { getThisObject() } //<1>
-    	assert whatIsThisObject() == this //<2>
-    	def whatIsThis = { this } //<3>
-    	assert whatIsThis() == this //<4>
+     def whatIsThisObject = { getThisObject() } //<1>
+     assert whatIsThisObject() == this //<2>
+     def whatIsThis = { this } //<3>
+     assert whatIsThis() == this //<4>
     }
 }
 class EnclosedInnerClass {
-	class Inner {
-		Closure cl = { this } //<5>
-	}
-	void run() {
-		def inner = new Inner()
-		assert inner.cl() == inner //<6>
-	}
+ class Inner {
+  Closure cl = { this } //<5>
+ }
+ void run() {
+  def inner = new Inner()
+  assert inner.cl() == inner //<6>
+ }
 }
 class NestedClosures {
-	void run() {
-		def nestedClosures = {
-			def cl = { this } //<7>
-			cl()
-		}
-		assert nestedClosures() == this //<8>
-		}
+ void run() {
+  def nestedClosures = {
+   def cl = { this } //<7>
+   cl()
+  }
+  assert nestedClosures() == this //<8>
+  }
 }
 ```
 
@@ -210,16 +234,19 @@ class NestedClosures {
 
 ```groovy
 class Person {
-	String name
-	int age
-	String toString() { "$name is $age years old" }
-		
-	String dump() {
-		def cl = {
-			String msg = this.toString() //<1>
-			println msg
-			msg		}
-		cl()	}}
+ String name
+ int age
+ String toString() { "$name is $age years old" }
+  
+ String dump() {
+  def cl = {
+   String msg = this.toString() //<1>
+   println msg
+   msg
+  }
+  cl()
+ }
+}
 def p = new Person(name:'tom', age:28)
 assert p.dump() == 'tom is 28 years old'
 ```
@@ -232,23 +259,31 @@ assert p.dump() == 'tom is 28 years old'
 
 ```groovy
 class Enclosing {
-	void run() {
-		def whatIsOwnerMethod = { getOwner() } //<1>
-		assert whatIsOwnerMethod() == this //<2>
-		def whatIsOwner = { owner } //<3>
-		assert whatIsOwner() == this //<4>	}}
+ void run() {
+  def whatIsOwnerMethod = { getOwner() } //<1>
+  assert whatIsOwnerMethod() == this //<2>
+  def whatIsOwner = { owner } //<3>
+  assert whatIsOwner() == this //<4>
+ }
+}
 class EnclosedInnerClass {
-	class Inner {
-		Closure cl = { owner } //<5>	}
-	void run() {
-		def inner = new Inner()
-		assert inner.cl() == inner //<6>	}}
+ class Inner {
+  Closure cl = { owner } //<5>
+ }
+ void run() {
+  def inner = new Inner()
+  assert inner.cl() == inner //<6>
+ }
+}
 class NestedClosures {
-	void run() {
-		def nestedClosures = {
-			def cl = { owner } //<7>
-			cl()		}
-		assert nestedClosures() == nestedClosures //<8>	}}
+ void run() {
+  def nestedClosures = {
+   def cl = { owner } //<7>
+   cl()
+  }
+  assert nestedClosures() == nestedClosures //<8>
+ }
+}
 ```
 
 > 1. 在`Enclosing`类里定义了一个闭包，返回`getOwner`
@@ -266,12 +301,17 @@ class NestedClosures {
 
 ```groovy
 class Enclosing {
-	void run() {
-		def cl = { getDelegate() } //<1>
-		def cl2 = { delegate } //<2>
-		assert cl() == cl2() //<3>
-		assert cl() == this //<4>		def enclosed = {
-			{ -> delegate }.call() //<5>		}		assert enclosed() == enclosed //<6>	}}
+ void run() {
+  def cl = { getDelegate() } //<1>
+  def cl2 = { delegate } //<2>
+  assert cl() == cl2() //<3>
+  assert cl() == this //<4>
+  def enclosed = {
+   { -> delegate }.call() //<5>
+  }
+  assert enclosed() == enclosed //<6>
+ }
+}
 ```
 
 > 1. 可以通过调用`getDelegate`方法获取到闭包的`delegate`
@@ -285,9 +325,11 @@ class Enclosing {
 
 ```groovy
 class Person {
-	String name}
+ String name
+}
 class Thing {
-	String name}
+ String name
+}
 def p = new Person(name: 'tom')
 def t = new Thing(name: 'tea')
 ```
@@ -314,7 +356,8 @@ def target = p
 def upperCasedNameUsingVar = { target.name.toUpperCase() }
 assert upperCasedNameUsingVar == 'tom'
 ```
-但还是存在一些主要的区别：
+
+但还是存在一些主要的区别：
 
 - 在上个例子中，`target`是一个在闭包内被引用的局部变量
 - 委托可以显式的使用。也就是说方法调用时不用带着`delegate.`。下一章节将进行详述。
@@ -325,7 +368,8 @@ assert upperCasedNameUsingVar == 'tom'
 
 ```groovy
 class Person {
-	String name}
+ String name
+}
 def p = new Person(name: 'tom')
 def cl = { name.toUpperCase() } //<1>
 cl.delegate = p //<2>
@@ -348,12 +392,15 @@ assert cl() == 'TOM' //<3>
 
 ```groovy
 class Person {
-	String name
-	def pretty = { "my name is $name" } //<1>
-	String toString() {
-		pretty()	}}
+ String name
+ def pretty = { "my name is $name" } //<1>
+ String toString() {
+  pretty()
+ }
+}
 class Thing {
-	String name //<2>}
+ String name //<2>
+}
 
 def p = new Person(name: 'Tom')
 def t = new Thing(name: 'Tea')
@@ -382,11 +429,13 @@ assert p.toString() == 'my name is Tea'
 
 ```groovy
 class Person {
-	String name
-	int age
-	def fetchAge = { age }}
+ String name
+ int age
+ def fetchAge = { age }
+}
 class Thing {
-	String name}
+ String name
+}
 
 def p = new Person(name: 'Jeff', age: 30)
 def t = new Thing(name: 'ball')
@@ -400,9 +449,11 @@ cl.delegate = p
 assert cl() == 30
 cl.delegate = t
 try {
-	cl()
-	assert false} catch (MissingPropertyException ex) {
-	// "age" is not defined on the delegate}
+ cl()
+ assert false
+} catch (MissingPropertyException ex) {
+ // "age" is not defined on the delegate
+}
 ```
 
 在这个例子中，我分别定义了两个类，`Person`和`Thing`。其中二者都有一个`name`属性，不同的是`Person`还有一个`age`属性。`Person`类还声明了一个引用的`age`属性的闭包。我们可以将默认的**owner first**委托机制更改为**delegate only**委托机制。因为闭包的拥有者是`Person`类，所以我们可以通过成功调用闭包，验证出闭包的委托就是`Person`类的一个实例。但是如果我们用类`Thing`的一个实例作为委托来调用闭包，发现失败了，程序抛出了`groovy.lang.MissingPropertyException`异常。尽管闭包是在`Person`类中定义的，但是拥有者却没被使用。
